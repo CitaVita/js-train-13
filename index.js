@@ -1,33 +1,46 @@
 // Завдання 1
 /**
- * Функція `complexConvert` отримує об'єкт з числовими значеннями і збільшує їх на 1.
- *
- *  data - json дані для обробки.
- * Повертає - json дані в яких всі числові значення збільшено на 1.
- */
-function complexConvert(data) {
-  // Створюємо новий порожній об'єкт для збереження результату.
-  // Перетворюємо json дані в об'єкт та отримуємо всі ключі об'єкта.
-  // Обходимо всі ключі та перевіряємо значення.
-  // Якщо значення є числом, збільшуємо його на 1.
-  // Якщо значення не є числом, просто копіюємо його у новий об'єкт без змін.
-  // Повертаємо оброблений об'єкт.
-}
+//  * Функція `complexConvert` отримує об'єкт з числовими значеннями і збільшує їх на 1.
+//  *
+//  *  data - json дані для обробки.
+//  * Повертає - json дані в яких всі числові значення збільшено на 1.
+//  */
+// function complexConvert(data) {
+//   // Створюємо новий порожній об'єкт для збереження результату.
+//   const obj = JSON.parse(data);
+//   // Перетворюємо json дані в об'єкт та отримуємо всі ключі об'єкта.
+//   function processObject(input) {
+//     const result = {};
+//     for (let key in input) {
+//       if (typeof input[key] === "number") {
+// // Обходимо всі ключі та перевіряємо значення.
+//   // Якщо значення є числом, збільшуємо його на 1
+//   result[key] = input[key] +1;
+//   } else if (typeof input[key] === "object" && input[key] !== null) {
+//  // Якщо значення не є числом, просто копіюємо його у новий об'єкт без змін.
+//  result[key] = processObject(input[key]);
+//       } else {
+//         result[key] = input[key];
+//     }
+//   }
+//   // Повертаємо оброблений об'єкт.
+//   return result;
+// }
 
-console.log("Завдання: 1 ==============================");
-const data = {
-  name: "John",
-  age: 30,
-  city: "New York",
-  grades: {
-    math: 90,
-    science: 80,
-    history: 70,
-  },
-};
-console.log(complexConvert(JSON.stringify(data)));
-// Виведе
-// {"name":"John","age":31,"city":"New York","grades":{"math":90,"science":80,"history":70}}
+// console.log("Завдання: 1 ==============================");
+// const data = {
+//   name: "John",
+//   age: 30,
+//   city: "New York",
+//   grades: {
+//     math: 90,
+//     science: 80,
+//     history: 70,
+//   },
+// };
+// console.log(complexConvert(JSON.stringify(data)));
+// // Виведе
+// // {"name":"John","age":31,"city":"New York","grades":{"math":90,"science":80,"history":70}}
 
 // Завдання 2
 
@@ -46,11 +59,26 @@ console.log(complexConvert(JSON.stringify(data)));
  */
 function manipulateUrl(url) {
   // Створюємо новий об'єкт URL.
+  const urlObj = new URL(url);
   // Змінюємо протокол URL на https.
+  urlObj.protocol = "https";
   // Змінюємо хост URL на 'newhost.com'.
+  urlObj.host = "newhost.com";
   // Додаємо параметр 'newParam' зі значенням 'newValue' до URL.
+  urlObj.searchParams.append("newParam", "newValue");
   // Видаляємо параметр 'oldParam' з URL, якщо він існує.
+  if (urlObj.searchParams.has("oldParam")) {
+    urlObj.searchParams.delete("oldParam");
+  }
   // Повертаємо об'єкт, який містить різні властивості URL.
+  return {
+    href: urlObj.href,
+    protocol: urlObj.protocol,
+    host: urlObj.host,
+    pathname: urlObj.pathname,
+    search: urlObj.search,
+    params: Array.from(urlObj.searchParams.entries()),
+  };
 }
 
 console.log("Завдання: 2 ==============================");
@@ -82,11 +110,18 @@ console.log(manipulateUrl(url));
  */
 function searchParamsURL(url) {
   // Створення нового об'єкта URL з вхідного рядка
+  const urlObj = new URL(url);
   // Отримання об'єкта URLSearchParams з властивості 'searchParams' об'єкта URL
+  const searchParams = urlObj.searchParams;
   // Створення порожнього словника для збереження параметрів пошуку
+  const params = new Map();
   // Перебір кожного параметра пошуку з 'searchParams' та додавання їх до словника 'params'
+  for (const [key, value] of searchParams.entries()) {
+    params.set(key, value);
+  }
   // Кожен 'param' - це масив, де [0] - ім'я параметра, а [1] - значення параметра
   // Повертаємо словник
+  return params;
 }
 
 console.log("Завдання: 3 ==============================");
@@ -115,9 +150,15 @@ console.log(
  */
 function manipulateSearchParams(paramsObj, newUrl) {
   // Створюємо новий об'єкт URL з нової URL-адреси.
+  const urlObj = new URL(newUrl);
   // Використовуючи метод 'keys' з об'єкта Object, отримуємо всі ключі paramsObj.
+  const keys = Object.keys(paramsObj);
   // За допомогою циклу 'for of' перебираємо всі ключі та додаємо параметри пошуку до urlObj.
+  for ( const key of keys) {
+    urlObj.searchParams.append(key, paramsObj[key]);
+  }
   // Повертаємо нову URL-адресу в рядковому форматі.
+  return urlObj.toString();
 }
 
 // Приклад використання функції manipulateSearchParams
@@ -142,8 +183,13 @@ console.log(
  */
 function deleteSearchParams(keys, url) {
   // Створюємо новий об'єкт URL з URL-адреси.
+  const urlObj = new URL(url);
   // За допомогою циклу 'for of' перебираємо всі ключі та видаляємо відповідні параметри пошуку з urlObj.
+  for (const key of keys) {
+    urlObj.searchParams.delete(key);
+  }
   // Повертаємо нову URL-адресу в рядковому форматі.
+  return urlObj.toString();
 }
 
 // Приклад використання функції deleteSearchParams
@@ -168,8 +214,15 @@ console.log(
  */
 function createURLWithParams(params, url) {
   // Створюємо новий об'єкт URL з базової URL-адреси.
+  const urlObj = new URL(url);
   // За допомогою циклу 'for in' перебираємо всі ключі та значення об'єкта params та додаємо їх як параметри пошуку до urlObj.
+  for (const key in params) {
+    if (params.hasOwnProperty(key)){
+    urlObj.searchParams.append(key, params[key]);
+  }
+}
   // Повертаємо нову URL-адресу в рядковому форматі.
+  return urlObj.toString();
 }
 
 // Приклад використання функції createURLWithParams
@@ -194,8 +247,11 @@ console.log(
  */
 function updateURLHash(url, hash) {
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
+  const urlObj = new URL(url);
   // Оновлюємо значення хеша в URL-адресі.
+urlObj.hash = `#${hash}`;
   // Повертаємо нову URL-адресу в рядковому форматі.
+  return urlObj.toString();
 }
 
 // Приклад використання функції updateURLHash
@@ -216,8 +272,11 @@ console.log(updateURLHash("https://example.com", "newHash"));
  */
 function appendSearchParam(url, key, value) {
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
+  const urlObj = new URL(url);
   // Додаємо новий параметр пошуку до URL-адреси.
+  urlObj.searchParams.append(key, value);
   // Повертаємо нову URL-адресу в рядковому форматі.
+return urlObj.toString();
 }
 
 // Приклад використання функції appendSearchParam
