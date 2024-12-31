@@ -547,13 +547,17 @@ console.log(
  */
 function getURLValues(url) {
   // Створюємо новий об'єкт URL з вхідною URL-адресою.
+  const urlObj = new URL(url);
   // Отримуємо об'єкт `URLSearchParams` з пошуковими параметрами.
+  const searchParams = urlObj.searchParams;
   // Отримуємо масив ключів пошукових параметрів.
+  const values = Array.from(searchParams.values());
   // Масив для збереження значень пошукових параметрів.
   // Перебираємо ключі пошукових параметрів.
   // Отримуємо всі значення для даного ключа за допомогою методу `getAll`.
   // Додаємо значення до масиву.
   // Повертаємо масив значень пошукових параметрів.
+  return values;
 }
 
 // Приклад використання функції getURLValues
@@ -574,8 +578,12 @@ console.log(
  */
 function getUrlKeys(url) {
   // Створюємо новий об'єкт URL з вхідної URL-адреси.
+  const urlObj = new URL(url);
   // Отримуємо масив зі всіма ключами пошукових параметрів за допомогою методу 'keys'.
+ const searchParams = urlObj.searchParams;
+ const keys = Array.from(searchParams.keys());
   // Повертаємо масив з ключами.
+  return keys;
 }
 
 // Приклад використання функції getUrlKeys
